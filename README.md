@@ -8,7 +8,7 @@
 - [Panoramica del Progetto](#-panoramica-del-progetto)
 - [Architettura e Modello di Controllo](#-architettura-e-modello-di-controllo)
 - [Caratteristiche Principali](#-caratteristiche-principali)
-- [Tech Stack](%EF%B8%8F-tech-stack)
+- [Tech Stack](-tech-stack)
 
 ---
 
