@@ -7,6 +7,7 @@
 ## 📌 Indice
 - [Project Summary](#-project-summary)
 - [System Architecture](#-system-architecture)
+- [Default Configuration & Parameters](#-default-configuration-parameters)
 - [Quickstart](#-quickstart)
 
 ---
@@ -50,6 +51,18 @@ graph TD
 * `sentinelRate`: proportion of jobs reserved for audit
 * `radarOmissionRate`: proportion of jobs omitted by radar at the specified id
 * `Zipf alpha`: skeweness factor of events distribution
+
+## ⚙️ Default Configuration & Parameters
+
+The simulation parameters are configured in `main.go` and reflect a standard Ground Segment operational testbed:
+
+| Parameter | Default Value | Location in Code | Description |
+| :--- | :--- | :--- | :--- |
+| **`numRadars`** | `8` | `main.go` | Number of concurrent radar worker nodes in the network pool |
+| **`totalJobs`** | `2000` | `main.go` | Total telemetry scan jobs processed during the run |
+| **`sentinelRate`** | `0.15` (15%) | `main.go` | Percentage of total workload allocated for ground-truth audit |
+| **`radarOmissionRates`** | Radar `2` & `3`: `20%` | `main.go` | Specific node failure/omission probability (BAR model) |
+| **`Zipf Distribution`** | `size = 2, alpha = 3.0` | `main.go` | Stochastic parameters for non-uniform space event generation |
 
 ## 🚀 Quickstart
 
