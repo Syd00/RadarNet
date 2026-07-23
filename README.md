@@ -7,7 +7,7 @@
 ## 📌 Indice
 - [Project Summary](#-project-summary)
 - [System Architecture](#-system-architecture)
-- [Default Configuration & Parameters](#-default-configuration-parameters)
+- [Default Configuration & Parameters](#%EF%B8%8F-default-configuration--parameters)
 - [Quickstart](#-quickstart)
 
 ---
