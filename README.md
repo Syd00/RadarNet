@@ -14,7 +14,7 @@
 
 ## 📖 Panoramica del Progetto
 
-**BAR-RadarNet** modella e simula una rete di nodi radar fisici operanti sotto il framework **BAR (Byzantine-Altruistic-Rational)**. In contesti decentralizzati ed edge computing, i nodi (Worker) possono comportarsi in modo opportunistico/razionale per risparmiare risorse computazionali o energetiche, omettendo calcoli e falsificando le risposte (mimetismo termico/gaussiano).
+**RadarNet** modella e simula una rete di nodi radar fisici operanti sotto il framework **BAR (Byzantine-Altruistic-Rational)**. In contesti decentralizzati ed edge computing, i nodi (Worker) possono comportarsi in modo opportunistico/razionale per risparmiare risorse computazionali o energetiche, omettendo calcoli e falsificando le risposte (mimetismo termico/gaussiano).
 
 Il progetto implementa un sistema di validazione proattivo basato su **Sentinelle (Ground Truth)** inserite stocasticamente nel flusso dei job per rilevare e quantificare l'omissione fraudolenta da parte dei nodi pigri.
 
