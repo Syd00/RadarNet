@@ -5,44 +5,65 @@
 ---
 
 ## 📌 Indice
-- [Panoramica del Progetto](#-panoramica-del-progetto)
-- [Architettura e Modello di Controllo](#-architettura-e-modello-di-controllo)
+- [Project Summary](#-project-summary)
+- [System Architecture](#-system-architecture)
 - [Caratteristiche Principali](#-caratteristiche-principali)
 - [Tech Stack](#%EF%B8%8F-tech-stack)
 
 ---
 
-## 📖 Panoramica del Progetto
+## 📖 Project Summary
 
-**RadarNet** modella e simula una rete di nodi radar fisici operanti sotto il framework **BAR (Byzantine-Altruistic-Rational)**. In contesti decentralizzati ed edge computing, i nodi (Worker) possono comportarsi in modo opportunistico/razionale per risparmiare risorse computazionali o energetiche, omettendo calcoli e falsificando le risposte (mimetismo termico/gaussiano).
+This project implements a concurrent simulation engine in **Go** that models a network of distributed radar/receiver nodes. It introduces a **Sentinel Verification Protocol** to detect opportunistic, lazy, or degraded nodes that return non-conformant calculations or fake idle states instead of computing real signal measurements.
 
-Il progetto implementa un sistema di validazione proattivo basato su **Sentinelle (Ground Truth)** inserite stocasticamente nel flusso dei job per rilevare e quantificare l'omissione fraudolenta da parte dei nodi pigri.
+* **Telemetry Signal Analysis:** Conversion from polar to Cartesian coordinates, dynamic calculation of **Radar Cross Section ($RCS$)** and **Signal-to-Noise Ratio ($SNR = \frac{1000}{Range^2}$)**.
+* **Distributed Data Integrity:** Fraud detection mechanism utilizing pre-computed ground-truth jobs (*Sentinels*) injected into the stream.
+* **High-Throughput Concurrency:** Asynchronous non-blocking pipeline using **Go channels** and **Worker Pools** for high telemetry throughput.
+* **Realistic Environment Stochastic Modeling:** Application of the **Zipf distribution** ($\alpha = 3.0$) to model non-uniform space target detection frequencies.
 
 ---
 
-## 📐 Architettura e Modello di Controllo
-
-La simulazione è strutturata su un'architettura **Producer-Consumer asincrona concorrente** sfruttando i canali nativi e le goroutine di Go.
+## 📐 System Architecture
 
 ```mermaid
 graph TD
-    A[Client - Generatore Job] -->|Iniezione Sentinelle / Zipf| B(Canale Bufferizzato: JobsChan)
-    B --> C{Worker Pool - Goroutines}
-    C -->|Radar 1| D[Computazione Hardware]
-    C -->|Radar 2| D
-    C -->|Radar N| D
-    D -->|Se pigro: simula rumore| E[Output Scansione]
-    D -->|Se onesto: calcola segnale| E
-    E --> F(Canale Bufferizzato: ResultsChan)
-    F --> G[Client - Validatore Sentinelle]
-    G -->|Esito verifica| H[Salvataggio Log CSV]
+    A["Client<br><i>(Job Generator & Verification)</i>"] -->|Injects Jobs<br>Genuine + Sentinels| B["jobsChan<br><i>(Channel)</i>"]
+
+    B --> C1["Worker Node 0<br><i>(Radar Hardware)</i>"]
+    B --> C2["Worker Node 1<br><i>(Lazy / Omission)</i>"]
+    B --> C3["Worker Node N<br><i>(Radar Hardware)</i>"]
+
+    C1 --> D["resultsChan<br><i>(Channel)</i>"]
+    C2 --> D
+    C3 --> D
+    D --> F[Telemetry audit & CSV export]
 ```
+### Module Breakdown
+* **`main.go`**: System orchestrator. Manages the concurrent worker pool, channel routing, and simulation reporting.
+* **`network.go`**: Network topology definition and task routing mechanism.
+* **`radar.go`**: Hardware simulation engine. Models spatial geometry, signal processing, Gaussian noise addition, and lazy/omission behaviors.
+* **`client.go`**: Control manager. Generates Sentinel ground truths, validates worker computations, and handles structured CSV logging.
+* **`zipf.go`**: Stochastic generator for non-uniform spatial event distributions.
 
-## ✨ Caratteristiche Principali
-- **Worker Pool Concorrente (Go):** Gestione asincrona parallela dei nodi fisici tramite goroutine e canali isolati per prevenire colli di bottiglia o race condition.
-- **Distribuzione di Zipf stocastica:** Generatore matematico integrato per simulare lo sbilanciamento del traffico ambientale reale in contesti di telerilevamento.
-- **Strategie di Allocazione delle Sentinelle:** Supporto ad allocazioni Uniformi per massimizzare probabilità di rilevamento.
+### Technical Parameters
+* `numRadars`: number of concurrent radar nodes
+* `totalJobs`: total number of jobs to be computed
+* `sentinelRate`: proportion of jobs reserved for audit
+* `radarOmissionRate`: proportion of jobs omitted by radar at the specified id
+* `Zipf alpha`: skeweness factor of events distribution
 
-## 🛠️ Tech Stack
-- **Go:** Core Engine, Concorrenza, Strutture Dati e Generazione Matematica.
-- **Formato dati:** CSV strutturato per l'interoperabilità tra l'engine di simulazione e la pipeline analitica.
+## 🚀 Quick Start
+
+### Prerequisites
+* **Go 1.20+** installed on your machine.
+
+### Execution
+
+```bash
+# Clone repository
+git clone https://github.com/Syd00/RadarNet.git
+cd RadarNet
+
+# Run the simulation engine
+go run .
+```
