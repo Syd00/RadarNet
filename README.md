@@ -7,8 +7,7 @@
 ## 📌 Indice
 - [Project Summary](#-project-summary)
 - [System Architecture](#-system-architecture)
-- [Caratteristiche Principali](#-caratteristiche-principali)
-- [Tech Stack](#%EF%B8%8F-tech-stack)
+- [Quickstart](#-quickstart)
 
 ---
 
@@ -52,7 +51,7 @@ graph TD
 * `radarOmissionRate`: proportion of jobs omitted by radar at the specified id
 * `Zipf alpha`: skeweness factor of events distribution
 
-## 🚀 Quick Start
+## 🚀 Quickstart
 
 ### Prerequisites
 * **Go 1.20+** installed on your machine.
